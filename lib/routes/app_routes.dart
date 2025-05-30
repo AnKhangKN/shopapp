@@ -1,0 +1,50 @@
+import 'package:go_router/go_router.dart';
+import 'package:shopapp/screens/wish/wish_screen.dart';
+import '../screens/cart/cart_screen.dart';
+import '../screens/home/home_screen.dart';
+import '../screens/product/product_screen.dart';
+import '../screens/profile/profile_screen.dart';
+import '../widgets/BottomNav/bottom_nav.dart';
+
+final GoRouter router = GoRouter(
+  initialLocation: '/',
+  debugLogDiagnostics: true,
+  routes: [
+    ShellRoute(
+      builder: (context, state, child) => BottomNav(child: child),
+      routes: [
+        GoRoute(
+          path: '/', // Tương đương với '/'
+          name: 'home',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(key: state.pageKey, child: const HomeScreen()),
+        ),
+        GoRoute(
+          path: '/cart',
+          name: 'cart',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(key: state.pageKey, child: const CartScreen()),
+        ),
+        GoRoute(
+          path: '/product',
+          name: 'product',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(key: state.pageKey, child: const ProductScreen()),
+        ),
+        GoRoute(
+          path: '/profile',
+          name: 'profile',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(key: state.pageKey, child: const ProfileScreen()),
+        ),
+        GoRoute(
+          path: '/wish',
+          name: 'wish',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(key: state.pageKey, child: const WishScreen()),
+        ),
+      ],
+    ),
+  ],
+);
+
