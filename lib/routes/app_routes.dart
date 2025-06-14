@@ -1,4 +1,7 @@
 import 'package:go_router/go_router.dart';
+import 'package:shopapp/screens/login/login_screen.dart';
+import 'package:shopapp/screens/search/search_screen.dart';
+import 'package:shopapp/screens/signup/signup_screen.dart';
 import 'package:shopapp/screens/wish/wish_screen.dart';
 import '../screens/cart/cart_screen.dart';
 import '../screens/home/home_screen.dart';
@@ -28,14 +31,18 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/product',
           name: 'product',
-          pageBuilder: (context, state) =>
-              NoTransitionPage(key: state.pageKey, child: const ProductScreen()),
+          pageBuilder: (context, state) => NoTransitionPage(
+            key: state.pageKey,
+            child: const ProductScreen(),
+          ),
         ),
         GoRoute(
           path: '/profile',
           name: 'profile',
-          pageBuilder: (context, state) =>
-              NoTransitionPage(key: state.pageKey, child: const ProfileScreen()),
+          pageBuilder: (context, state) => NoTransitionPage(
+            key: state.pageKey,
+            child: const ProfileScreen(),
+          ),
         ),
         GoRoute(
           path: '/wish',
@@ -43,8 +50,25 @@ final GoRouter router = GoRouter(
           pageBuilder: (context, state) =>
               NoTransitionPage(key: state.pageKey, child: const WishScreen()),
         ),
+        GoRoute(
+          path: '/login',
+          name: 'login',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(key: state.pageKey, child: const LoginScreen()),
+        ),
+        GoRoute(
+          path: '/signup',
+          name: 'signup',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(key: state.pageKey, child: SignupScreen()),
+        ),
+        GoRoute(
+          path: '/search',
+          name: 'search',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(key: state.pageKey, child: SearchScreen()),
+        ),
       ],
     ),
   ],
 );
-
