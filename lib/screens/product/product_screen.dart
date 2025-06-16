@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:shopapp/models/product_models.dart';
 import 'package:shopapp/screens/product/product_item_card/product_item_card.dart';
 import 'package:shopapp/services/product_services.dart';
-import '../../widgets/CustomAppBar/CustomAppBar.dart';
 import 'category_header_delegate/category_header_delegate.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -18,6 +17,7 @@ class _ProductScreenState extends State<ProductScreen> {
   final _productServices = ProductServices();
   List<Product> _allProducts = [];
   List<Product> _products = [];
+  List<String> _categories = ["Tất cả"];
   bool _loading = true;
   String _selectedCategory = "Tất cả";
 
@@ -30,9 +30,20 @@ class _ProductScreenState extends State<ProductScreen> {
   void fetchProducts() async {
     try {
       final result = await _productServices.getAllProducts();
+
+      final Map<String, String> categoryMap = {};
+      for (var p in result) {
+        final original = p.category?.trim();
+        final normalized = original?.toLowerCase();
+        if (original != null && original.isNotEmpty && normalized != null) {
+          categoryMap[normalized] = original;
+        }
+      }
+
       setState(() {
         _allProducts = result;
         _products = result;
+        _categories = ["Tất cả", ...categoryMap.values.toSet()];
         _loading = false;
       });
     } catch (e) {
@@ -46,82 +57,87 @@ class _ProductScreenState extends State<ProductScreen> {
   void filterProducts(String category) {
     setState(() {
       _selectedCategory = category;
-      if (category == "Tất cả") {
-        _products = _allProducts;
-      } else {
-        _products = _allProducts
-            .where(
-              (product) =>
-                  product.category?.toLowerCase() == category.toLowerCase(),
-            )
-            .toList();
-      }
+      _products = (category == "Tất cả")
+          ? _allProducts
+          : _allProducts
+          .where((product) =>
+      product.category?.toLowerCase() == category.toLowerCase())
+          .toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(FeatherIcons.search),
-            onPressed: () {
-              context.go('/search');
-            },
-          ),
-        ],
-      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _products.isEmpty
           ? const Center(child: Text("Không có sản phẩm nào."))
           : CustomScrollView(
-              slivers: [
-                // Sliver: tiêu đề "Danh sách sản phẩm"
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 12,
-                      right: 12,
-                      top: 16,
-                      bottom: 12,
-                    ),
-                    child: Text(
-                      "Danh sách sản phẩm",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            floating: false,
+            expandedHeight: 100,
+            backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+            flexibleSpace: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                final top = constraints.biggest.height;
+                final showCenterTitle = top < 120;
+
+                return FlexibleSpaceBar(
+                  collapseMode: CollapseMode.parallax,
+                  // centerTitle: showCenterTitle,
+                  titlePadding: showCenterTitle
+                      ? const EdgeInsets.only(left: 16.0, bottom: 16.0)
+                      : const EdgeInsets.only(left: 16.0, bottom: 16.0),
+                  title: const Text(
+                    'Sản phẩm',
+                    style: TextStyle(fontSize: 18, ),
                   ),
-                ),
-                // Sliver: Header lọc danh mục
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: CategoryHeaderDelegate(
-                    selectedCategory: _selectedCategory,
-                    onCategorySelected: filterProducts,
-                  ),
-                ),
-                // Sliver: Grid sản phẩm
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  sliver: SliverGrid(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      return ProductItemCard(product: _products[index]);
-                    }, childCount: _products.length),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 8,
-                          mainAxisSpacing: 8,
-                          childAspectRatio: 0.6,
-                        ),
-                  ),
-                ),
-              ],
+                );
+              },
             ),
+            actions: [
+              IconButton(
+                icon: const Icon(FeatherIcons.search),
+                onPressed: () {
+                  final currentLocation = GoRouter.of(context)
+                      .routerDelegate.currentConfiguration.uri
+                      .toString();
+                  context.go('/search?from=$currentLocation');
+                },
+              ),
+            ],
+          ),
+
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: CategoryHeaderDelegate(
+              selectedCategory: _selectedCategory,
+              onCategorySelected: filterProducts,
+              categories: _categories,
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            sliver: SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) =>
+                    ProductItemCard(product: _products[index]),
+                childCount: _products.length,
+              ),
+              gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 0.6,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:shopapp/screens/login/login_screen.dart';
+import 'package:shopapp/screens/product_detail/product_detail_screen.dart';
 import 'package:shopapp/screens/search/search_screen.dart';
 import 'package:shopapp/screens/signup/signup_screen.dart';
 import 'package:shopapp/screens/wish/wish_screen.dart';
@@ -60,14 +61,36 @@ final GoRouter router = GoRouter(
           path: '/signup',
           name: 'signup',
           pageBuilder: (context, state) =>
-              NoTransitionPage(key: state.pageKey, child: SignupScreen()),
+              NoTransitionPage(key: state.pageKey, child: const SignupScreen()),
         ),
         GoRoute(
           path: '/search',
           name: 'search',
-          pageBuilder: (context, state) =>
-              NoTransitionPage(key: state.pageKey, child: SearchScreen()),
+          pageBuilder: (context, state) {
+            final from = state.uri.queryParameters['from'];
+            return NoTransitionPage(
+              key: state.pageKey,
+              child: SearchScreen(from: from),
+            );
+          },
         ),
+
+        GoRoute(
+          path: '/product/:productId',
+          name: 'product_detail',
+          pageBuilder: (context, state) {
+            final id = state.pathParameters['productId']!;
+            final from = state.uri.queryParameters['from'];
+            return NoTransitionPage(
+              key: state.pageKey,
+              child: ProductDetailScreen(
+                productId: id,
+                from: from,
+              ),
+            );
+          },
+        ),
+
       ],
     ),
   ],

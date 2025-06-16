@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shopapp/models/product_models.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import '../../../constants/app_colors.dart';
 
 class ProductItemCard extends StatelessWidget {
   final Product product;
@@ -19,20 +22,59 @@ class ProductItemCard extends StatelessWidget {
     return Card(
       child: InkWell(
         onTap: () {
-          context.go('/'); // hoặc '/product/${product.id}'
+          final currentLocation = GoRouter.of(
+            context,
+          ).routerDelegate.currentConfiguration.uri.toString();
+          context.go('/product/${product.id}?from=$currentLocation');
         },
 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            imageUrl != null
-                ? Image.network(
-                    imageUrl,
-                    height: 100,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  )
-                : const Icon(Icons.image_not_supported, size: 100),
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              child: Stack(
+                children: [
+                  imageUrl != null
+                      ? Image.network(
+                          imageUrl,
+                          height: 180,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        )
+                      : const SizedBox(
+                          height: 180,
+                          child: Center(
+                            child: Icon(Icons.image_not_supported, size: 60),
+                          ),
+                        ),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: GestureDetector(
+                      onTap: () {
+                        // TODO: Xử lý thêm vào wishlist
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.8),
+                          shape: BoxShape.circle,
+                        ),
+                        padding: const EdgeInsets.all(6),
+                        child: const Icon(
+                          FeatherIcons.heart,
+                          size: 20,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
@@ -55,13 +97,6 @@ class ProductItemCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Text(
                 'Giá: $price VNĐ',
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(
-                'Đã bán: ${product.soldCount}',
                 style: const TextStyle(fontSize: 12),
               ),
             ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shopapp/widgets/CustomAppBar/CustomAppBar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -9,13 +8,15 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: AppBar(
         actions: [
-
           IconButton(
             icon: const Icon(FeatherIcons.search),
             onPressed: () {
-              context.go('/search');
+              final currentLocation = GoRouter.of(
+                context,
+              ).routerDelegate.currentConfiguration.uri.toString();
+              context.go('/search?from=$currentLocation');
             },
           ),
         ],

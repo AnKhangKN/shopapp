@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shopapp/constants/app_colors.dart';
+
+import '../../constants/app_colors.dart';
 
 class SearchScreen extends StatelessWidget {
-  const SearchScreen({super.key});
+  final String? from;
+
+  const SearchScreen({super.key, this.from}); // Thêm this.from
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea( // tránh tai thỏ, notch
+      body: SafeArea(
         child: Column(
           children: [
             Container(
@@ -19,7 +22,7 @@ class SearchScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SizedBox(
-                      height: 50, // chiều cao TextField
+                      height: 50,
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: "Nhập sản phẩm cần tìm ...",
@@ -42,11 +45,15 @@ class SearchScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10), // khoảng cách giữa TextField và nút
+                  const SizedBox(width: 10),
                   TextButton(
                     onPressed: () {
-                      // Xử lý khi bấm Cancel (ví dụ: quay về màn trước)
-                      context.go('/');
+                      // Nếu có from thì quay lại from, ngược lại về trang chủ
+                      if (from != null && from!.isNotEmpty) {
+                        context.go(from!);
+                      } else {
+                        context.go('/');
+                      }
                     },
                     child: const Text('Cancel'),
                   ),

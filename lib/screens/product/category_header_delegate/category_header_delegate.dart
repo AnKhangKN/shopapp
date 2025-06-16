@@ -4,13 +4,13 @@ import 'package:shopapp/constants/app_colors.dart';
 class CategoryHeaderDelegate extends SliverPersistentHeaderDelegate {
   final String selectedCategory;
   final Function(String) onCategorySelected;
+  final List<String> categories;
 
   CategoryHeaderDelegate({
     required this.selectedCategory,
     required this.onCategorySelected,
+    required this.categories
   });
-
-  final List<String> categories = ["Tất cả", "Giày"];
 
   @override
   Widget build(

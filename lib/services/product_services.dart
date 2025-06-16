@@ -27,4 +27,28 @@ class ProductServices {
       throw Exception('Lỗi kết nối: $error');
     }
   }
+
+  Future<Product> getProductDetail(String productId) async {
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: dotenv.env['API_BASE_URL']!,
+        connectTimeout: Duration(seconds: 5),
+        receiveTimeout: Duration(seconds: 5),
+      ),
+    );
+
+    try {
+      final response = await dio.get('/shared/products/$productId');
+
+      if (response.statusCode == 200) {
+        final productJson = response.data['product']; // Giả sử backend trả về { product: {...} }
+        return Product.fromJson(productJson);
+      } else {
+        throw Exception('Lỗi lấy sản phẩm: ${response.statusMessage}');
+      }
+    } catch (error) {
+      throw Exception('Lỗi kết nối: $error');
+    }
+  }
+
 }
