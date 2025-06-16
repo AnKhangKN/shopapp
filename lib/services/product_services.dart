@@ -1,18 +1,19 @@
 import 'package:dio/dio.dart';
 import '../models/product_models.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ProductServices {
-  final Dio _dio = Dio(
-    BaseOptions(
-      baseUrl: 'http://10.0.2.2:8001/api',
-      connectTimeout: Duration(seconds: 5),
-      receiveTimeout: Duration(seconds: 5),
-    ),
-  );
-
   Future<List<Product>> getAllProducts() async {
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: dotenv.env['API_BASE_URL']!,
+        connectTimeout: Duration(seconds: 5),
+        receiveTimeout: Duration(seconds: 5),
+      ),
+    );
+
     try {
-      final response = await _dio.get('/shared/products');
+      final response = await dio.get('/shared/products');
 
       if (response.statusCode == 200) {
         final products = (response.data['products'] as List)
