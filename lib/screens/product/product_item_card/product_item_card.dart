@@ -45,6 +45,15 @@ class ProductItemCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Text(
+                product.category,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                // style: const TextStyle(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Text(
                 'Giá: $price VNĐ',
                 style: const TextStyle(fontSize: 12),
               ),
