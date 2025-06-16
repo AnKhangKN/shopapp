@@ -7,7 +7,6 @@ import 'package:shopapp/services/product_services.dart';
 import '../../widgets/CustomAppBar/CustomAppBar.dart';
 import 'category_header_delegate/category_header_delegate.dart';
 
-// --- Widget chính ---
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
 

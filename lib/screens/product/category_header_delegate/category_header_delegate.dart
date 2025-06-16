@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopapp/constants/app_colors.dart';
 
 class CategoryHeaderDelegate extends SliverPersistentHeaderDelegate {
   final String selectedCategory;
@@ -9,17 +10,14 @@ class CategoryHeaderDelegate extends SliverPersistentHeaderDelegate {
     required this.onCategorySelected,
   });
 
-  final List<String> categories = [
-    "Tất cả",
-    "Áo",
-    "Quần",
-    "Giày",
-    "Phụ kiện",
-    "Khác",
-  ];
+  final List<String> categories = ["Tất cả", "Giày"];
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
@@ -41,8 +39,13 @@ class CategoryHeaderDelegate extends SliverPersistentHeaderDelegate {
         onTap: () => onCategorySelected(title),
         child: Chip(
           label: Text(title),
-          backgroundColor: isSelected ? Colors.blue : Colors.grey.shade200,
-          labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
+          visualDensity: const VisualDensity(vertical: -2),
+          backgroundColor: isSelected
+              ? AppColors.textPrimary
+              : AppColors.colorWhite,
+          labelStyle: TextStyle(
+            color: isSelected ? Colors.white : Colors.black,
+          ),
         ),
       ),
     );
@@ -50,8 +53,10 @@ class CategoryHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   double get maxExtent => 50;
+
   @override
   double get minExtent => 50;
+
   @override
   bool shouldRebuild(covariant CategoryHeaderDelegate oldDelegate) =>
       oldDelegate.selectedCategory != selectedCategory;
