@@ -316,58 +316,45 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 style: TextStyle(color: Colors.red),
               ),
 
-            SizedBox(height: 20),
+            SizedBox(height: 30),
 
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Nút -
-                SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      backgroundColor: Colors.grey[300],
-                    ),
-                    onPressed: () {
-                      // TODO: giảm số lượng
-                    },
-                    child: const Text("-", style: TextStyle(fontSize: 18)),
-                  ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
                 ),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove),
+                      onPressed: () {
+                        // TODO: giảm số lượng
+                      },
+                    ),
+                    SizedBox(
+                      width: 40,
+                      height: 35,
+                      child: TextField(
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () {
+                        // TODO: tăng số lượng
+                      },
+                    ),
+                  ],
+                ),
+              ),
 
-                // Ô nhập số lượng
-                SizedBox(
-                  width: 40,
-                  height: 30,
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.zero,
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-
-                // Nút +
-                SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      backgroundColor: Colors.grey[300],
-                    ),
-                    onPressed: () {
-                      // TODO: tăng số lượng
-                    },
-                    child: const Text("+", style: TextStyle(fontSize: 18)),
-                  ),
-                ),
-              ],
-            ),
 
             SizedBox(height: 20),
 
