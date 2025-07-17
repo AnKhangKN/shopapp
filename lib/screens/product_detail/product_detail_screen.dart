@@ -4,6 +4,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shopapp/constants/app_colors.dart';
+import 'package:shopapp/screens/product_detail/button_custom/button_custom.dart';
 import 'package:shopapp/services/product_services.dart';
 import 'package:shopapp/models/product_models.dart';
 import 'package:shopapp/models/product_detail_models.dart';
@@ -293,9 +294,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
+
                 children: colors.map((color) {
                   return ChoiceChip(
-                    label: Text(color),
+                    label: Text(
+                      color,
+                      style: TextStyle(color: AppColors.textPrimary),
+                    ),
                     selected: _selectedColor == color,
                     onSelected: (bool selected) {
                       setState(() {
@@ -311,34 +316,71 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 style: TextStyle(color: Colors.red),
               ),
 
-            // add to bag
-            SizedBox(
-              width: double.infinity, // Full width
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.textPrimary,
-                  foregroundColor: AppColors.colorWhite,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
+            SizedBox(height: 30),
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                onPressed: () {
-                  // TODO: thêm logic thêm vào giỏ hàng
-                },
-                child: const Text(
-                  "Thêm vào giỏ hàng",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove),
+                      onPressed: () {
+                        // TODO: giảm số lượng
+                      },
+                    ),
+                    SizedBox(
+                      width: 40,
+                      height: 35,
+                      child: TextField(
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(vertical: 10),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () {
+                        // TODO: tăng số lượng
+                      },
+                    ),
+                  ],
                 ),
               ),
+
+
+            SizedBox(height: 20),
+
+            // add to bag
+            ButtonCustom(
+              onPressed: () {
+                // Thêm vào giỏ hàng
+                print("Sản phẩm đã được thêm vào giỏ");
+              },
+              label: "Thêm vào giỏ hàng",
             ),
 
+            SizedBox(height: 20),
+
             // add to wish list
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(vertical: 16),
-              child: ButtonTheme(child: Text("Thêm vào yêu thích")),
+            ButtonCustom(
+              backgroundColor: Colors.white,
+              foregroundColor: AppColors.textPrimary,
+              onPressed: () {
+                // Thêm vào giỏ hàng
+                print("Sản phẩm đã được thêm vào yêu thích");
+              },
+              label: "Thêm vào yêu thích",
             ),
+
+            SizedBox(height: 50),
 
             Text(
               product.description ?? 'Chưa có mô tả',
