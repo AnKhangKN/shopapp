@@ -17,6 +17,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
   bool _obscurePassword = true;
 
+  String? _serverEmailError;
+
   Future<void> _handleRegister() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -42,9 +44,19 @@ class _SignupScreenState extends State<SignupScreen> {
           Navigator.pop(context); // chuyển về màn đăng nhập nếu muốn
         }
       } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Lỗi: ${e.toString()}')));
+        final errorMessage = e.toString().replaceAll('Exception: ', '');
+
+        if (errorMessage.contains('Email đã tồn tại')) {
+          setState(() {
+            _serverEmailError = errorMessage;
+          });
+          _formKey.currentState!.validate(); // ép buộc form cập nhật lỗi
+        } else {
+          // Hiển thị lỗi khác (ngoài email), vẫn dùng SnackBar
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(errorMessage)));
+        }
       }
     }
   }
@@ -108,13 +120,21 @@ class _SignupScreenState extends State<SignupScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Vui lòng nhập email';
                   }
-                  // Regex kiểm tra định dạng email cơ bản
+
                   final emailRegex = RegExp(
                     r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                   );
                   if (!emailRegex.hasMatch(value)) {
                     return 'Email không hợp lệ';
                   }
+
+                  // ✅ Nếu có lỗi từ server (ví dụ: email đã tồn tại), trả về lỗi đó
+                  if (_serverEmailError != null) {
+                    final error = _serverEmailError!;
+                    _serverEmailError = null; // reset sau khi hiển thị
+                    return error;
+                  }
+
                   return null;
                 },
               ),
@@ -172,7 +192,10 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text('Đăng ký', style: TextStyle(color: Colors.white),),
+                child: const Text(
+                  'Đăng ký',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
 
               const SizedBox(height: 20),

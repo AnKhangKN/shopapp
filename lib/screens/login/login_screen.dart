@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shopapp/screens/home/home_screen.dart';
 import 'package:shopapp/screens/signup/signup_screen.dart';
 import 'package:shopapp/services/user_services.dart';
@@ -28,30 +29,17 @@ class _LoginScreenState extends State<LoginScreen> {
         // Nếu trả về là Response thì check statusCode
         if (res.statusCode == 200) {
           final data = res.data;
-          final name = data['userName'];
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Thành công'),
-              content: Text('Đăng nhập thành công! Xin chào $name'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Đóng dialog
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomeScreen()),
-                    );
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            ),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Đăng nhập thành công!')));
+
+          // TODO: Chuyển sang màn hình chính hoặc lưu token, tuỳ theo app của bạn
+          context.goNamed('splash');
         }
       } catch (e) {
+        // Lỗi phía server đã được xử lý và gửi từ service
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Lỗi: ${e.toString()}')),
+          SnackBar(content: Text(e.toString().replaceAll('Exception: ', ''))),
         );
       }
     }
@@ -162,7 +150,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () {
                           // TODO: Chuyển sang màn Quên mật khẩu
                         },
-                        child: const Text('Quên mật khẩu?', style: TextStyle(color: Colors.black),),
+                        child: const Text(
+                          'Quên mật khẩu?',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ),
 
@@ -197,12 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextButton(
                           onPressed: () {
                             // TODO: Chuyển sang trang Đăng ký
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SignupScreen(),
-                              ),
-                            );
+                            context.pushNamed('signup');
                           },
                           child: const Text('Đăng ký'),
                         ),

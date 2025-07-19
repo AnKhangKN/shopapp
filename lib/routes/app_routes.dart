@@ -9,16 +9,148 @@ import '../screens/home/home_screen.dart';
 import '../screens/product/product_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../widgets/BottomNav/bottom_nav.dart';
+import '../screens/splash/splash_screen.dart';
+
+// final GoRouter router = GoRouter(
+//   initialLocation: '/login',
+//   debugLogDiagnostics: true,
+//   routes: [
+//     ShellRoute(
+//       builder: (context, state, child) => BottomNav(child: child),
+//       routes: [
+//         GoRoute(
+//           path: '/', // Tương đương với '/'
+//           name: 'home',
+//           pageBuilder: (context, state) =>
+//               NoTransitionPage(key: state.pageKey, child: const HomeScreen()),
+//         ),
+//         GoRoute(
+//           path: '/cart',
+//           name: 'cart',
+//           pageBuilder: (context, state) =>
+//               NoTransitionPage(key: state.pageKey, child: const CartScreen()),
+//         ),
+//         GoRoute(
+//           path: '/product',
+//           name: 'product',
+//           pageBuilder: (context, state) => NoTransitionPage(
+//             key: state.pageKey,
+//             child: const ProductScreen(),
+//           ),
+//         ),
+//         GoRoute(
+//           path: '/profile',
+//           name: 'profile',
+//           pageBuilder: (context, state) => NoTransitionPage(
+//             key: state.pageKey,
+//             child: const ProfileScreen(),
+//           ),
+//         ),
+//         GoRoute(
+//           path: '/wish',
+//           name: 'wish',
+//           pageBuilder: (context, state) =>
+//               NoTransitionPage(key: state.pageKey, child: const WishScreen()),
+//         ),
+//         GoRoute(
+//           path: '/login',
+//           name: 'login',
+//           pageBuilder: (context, state) =>
+//               NoTransitionPage(key: state.pageKey, child: const LoginScreen()),
+//         ),
+//         GoRoute(
+//           path: '/signup',
+//           name: 'signup',
+//           pageBuilder: (context, state) =>
+//               NoTransitionPage(key: state.pageKey, child: const SignupScreen()),
+//         ),
+//         GoRoute(
+//           path: '/search',
+//           name: 'search',
+//           pageBuilder: (context, state) {
+//             final from = state.uri.queryParameters['from'];
+//             return NoTransitionPage(
+//               key: state.pageKey,
+//               child: SearchScreen(from: from),
+//             );
+//           },
+//         ),
+//
+//         GoRoute(
+//           path: '/product/:productId',
+//           name: 'product_detail',
+//           pageBuilder: (context, state) {
+//             final id = state.pathParameters['productId']!;
+//             final from = state.uri.queryParameters['from'];
+//             return NoTransitionPage(
+//               key: state.pageKey,
+//               child: ProductDetailScreen(
+//                 productId: id,
+//                 from: from,
+//               ),
+//             );
+//           },
+//         ),
+//
+//       ],
+//     ),
+//   ],
+// );
 
 final GoRouter router = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/splash',
   debugLogDiagnostics: true,
   routes: [
+
+    // ✅ Những trang KHÔNG có BottomNav
+    GoRoute(
+      path: '/splash',
+      name: 'splash',
+      pageBuilder: (context, state) =>
+          NoTransitionPage(key: state.pageKey, child: const SplashScreen()),
+    ),
+    GoRoute(
+      path: '/login',
+      name: 'login',
+      pageBuilder: (context, state) =>
+          NoTransitionPage(key: state.pageKey, child: const LoginScreen()),
+    ),
+    GoRoute(
+      path: '/signup',
+      name: 'signup',
+      pageBuilder: (context, state) =>
+          NoTransitionPage(key: state.pageKey, child: const SignupScreen()),
+    ),
+    GoRoute(
+      path: '/search',
+      name: 'search',
+      pageBuilder: (context, state) {
+        final from = state.uri.queryParameters['from'];
+        return NoTransitionPage(
+          key: state.pageKey,
+          child: SearchScreen(from: from),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/product/:productId',
+      name: 'product_detail',
+      pageBuilder: (context, state) {
+        final id = state.pathParameters['productId']!;
+        final from = state.uri.queryParameters['from'];
+        return NoTransitionPage(
+          key: state.pageKey,
+          child: ProductDetailScreen(productId: id, from: from),
+        );
+      },
+    ),
+
+    // ✅ Các route CÓ BottomNav
     ShellRoute(
       builder: (context, state, child) => BottomNav(child: child),
       routes: [
         GoRoute(
-          path: '/', // Tương đương với '/'
+          path: '/',
           name: 'home',
           pageBuilder: (context, state) =>
               NoTransitionPage(key: state.pageKey, child: const HomeScreen()),
@@ -32,18 +164,14 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/product',
           name: 'product',
-          pageBuilder: (context, state) => NoTransitionPage(
-            key: state.pageKey,
-            child: const ProductScreen(),
-          ),
+          pageBuilder: (context, state) =>
+              NoTransitionPage(key: state.pageKey, child: const ProductScreen()),
         ),
         GoRoute(
           path: '/profile',
           name: 'profile',
-          pageBuilder: (context, state) => NoTransitionPage(
-            key: state.pageKey,
-            child: const ProfileScreen(),
-          ),
+          pageBuilder: (context, state) =>
+              NoTransitionPage(key: state.pageKey, child: const ProfileScreen()),
         ),
         GoRoute(
           path: '/wish',
@@ -51,46 +179,6 @@ final GoRouter router = GoRouter(
           pageBuilder: (context, state) =>
               NoTransitionPage(key: state.pageKey, child: const WishScreen()),
         ),
-        GoRoute(
-          path: '/login',
-          name: 'login',
-          pageBuilder: (context, state) =>
-              NoTransitionPage(key: state.pageKey, child: const LoginScreen()),
-        ),
-        GoRoute(
-          path: '/signup',
-          name: 'signup',
-          pageBuilder: (context, state) =>
-              NoTransitionPage(key: state.pageKey, child: const SignupScreen()),
-        ),
-        GoRoute(
-          path: '/search',
-          name: 'search',
-          pageBuilder: (context, state) {
-            final from = state.uri.queryParameters['from'];
-            return NoTransitionPage(
-              key: state.pageKey,
-              child: SearchScreen(from: from),
-            );
-          },
-        ),
-
-        GoRoute(
-          path: '/product/:productId',
-          name: 'product_detail',
-          pageBuilder: (context, state) {
-            final id = state.pathParameters['productId']!;
-            final from = state.uri.queryParameters['from'];
-            return NoTransitionPage(
-              key: state.pageKey,
-              child: ProductDetailScreen(
-                productId: id,
-                from: from,
-              ),
-            );
-          },
-        ),
-
       ],
     ),
   ],
