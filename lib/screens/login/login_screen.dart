@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shopapp/models/token_storage.dart';
 import 'package:shopapp/screens/home/home_screen.dart';
 import 'package:shopapp/screens/signup/signup_screen.dart';
 import 'package:shopapp/services/user_services.dart';
@@ -18,29 +19,32 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _isPasswordVisible = false;
 
+  String? _loginError;
+
   Future<void> _handleLogin() async {
+    final token = await TokenStorage.getToken();
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _loginError = null; // reset lỗi cũ
+      });
+
       try {
         final res = await UserServices().loginUser(
           email: _emailController.text.trim(),
           password: _passwordController.text,
         );
 
-        // Nếu trả về là Response thì check statusCode
         if (res.statusCode == 200) {
-          final data = res.data;
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Đăng nhập thành công!')));
-
-          // TODO: Chuyển sang màn hình chính hoặc lưu token, tuỳ theo app của bạn
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Đăng nhập thành công!')),
+          );
           context.goNamed('splash');
         }
       } catch (e) {
-        // Lỗi phía server đã được xử lý và gửi từ service
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString().replaceAll('Exception: ', ''))),
-        );
+        // Nếu đăng nhập thất bại, gán lỗi để hiển thị trong TextFormField
+        setState(() {
+          _loginError = 'Email hoặc mật khẩu không đúng';
+        });
       }
     }
   }
@@ -135,6 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             });
                           },
                         ),
+                        errorText: _loginError,
                       ),
                       validator: (value) => value == null || value.length < 6
                           ? 'Ít nhất 6 ký tự'

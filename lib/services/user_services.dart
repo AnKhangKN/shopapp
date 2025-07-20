@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:shopapp/models/token_storage.dart';
 import '../models/product_models.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shopapp/models/user_model.dart';
 
 class UserServices {
   final Dio _dio = Dio(BaseOptions(
@@ -29,13 +31,11 @@ class UserServices {
       final token = res.data['token'];
 
       if (token != null && token is String && token.isNotEmpty) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', token);
+        await TokenStorage.setToken(token);
         print("Token vừa lưu: $token");
       } else {
         print("Token không tồn tại hoặc không hợp lệ: $token");
       }
-      // await prefs.remove('token'); xóa token khi đăng xuất
       return res;
     } on DioException catch (e) {
       if (e.response != null) {
@@ -72,7 +72,27 @@ class UserServices {
     }
   }
 
-  Future<Response> getUserInfo({required String accessToken}) async {
+//   Future<UserModel> getUserInfo({required String accessToken}) async {
+//     try {
+//       final res = await _dio.get(
+//         '/user/get-user-info',
+//         options: Options(
+//           headers: {
+//             'Authorization': 'Bearer $accessToken',
+//           },
+//         ),
+//       );
+//       return UserModel.fromJson(res.data);
+//     } on DioException catch (e) {
+//       if (e.response != null) {
+//         throw Exception(e.response?.data['message'] ?? 'Lấy thông tin thất bại!');
+//       } else {
+//         throw Exception('Không thể kết nối đến server!');
+//       }
+//     }
+//   }
+// }
+  Future<UserModel> getUserInfo({required String accessToken}) async {
     try {
       final res = await _dio.get(
         '/user/get-user-info',
@@ -82,13 +102,25 @@ class UserServices {
           },
         ),
       );
-      return res;
+
+      // Giả sử backend trả về:
+      // {
+      //   "status": "OK",
+      //   "message": "Lấy thông tin thành công",
+      //   "token": { ...thông tin user... }
+      // }
+
+      final data = res.data['data'];
+      print("Token đang dùng để gọi getUserInfo: $data");// Lấy object chứa user
+      return UserModel.fromJson(data);
     } on DioException catch (e) {
       if (e.response != null) {
-        throw Exception(e.response?.data['message'] ?? 'Lấy thông tin thất bại!');
+        throw Exception(
+            e.response?.data['message'] ?? 'Lấy thông tin thất bại!');
       } else {
         throw Exception('Không thể kết nối đến server!');
       }
     }
   }
+
 }
