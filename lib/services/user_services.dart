@@ -6,24 +6,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopapp/models/user_model.dart';
 
 class UserServices {
-  final Dio _dio = Dio(BaseOptions(
-    baseUrl: dotenv.env['API_BASE_URL']!,
-    // đổi thành IP hoặc domain thực tế nếu dùng mobile
-    connectTimeout: const Duration(seconds: 10),
-    receiveTimeout: const Duration(seconds: 10),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  ));
+  final Dio _dio = Dio(
+    BaseOptions(
+      baseUrl: dotenv.env['API_BASE_URL']!,
+      // đổi thành IP hoặc domain thực tế nếu dùng mobile
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+      headers: {'Content-Type': 'application/json'},
+    ),
+  );
 
   Future<Response> loginUser({
     required String email,
     required String password,
   }) async {
-    final data = {
-      'email': email,
-      'password': password,
-    };
+    final data = {'email': email, 'password': password};
 
     try {
       final res = await _dio.post('/user/login', data: data);
@@ -72,35 +69,11 @@ class UserServices {
     }
   }
 
-//   Future<UserModel> getUserInfo({required String accessToken}) async {
-//     try {
-//       final res = await _dio.get(
-//         '/user/get-user-info',
-//         options: Options(
-//           headers: {
-//             'Authorization': 'Bearer $accessToken',
-//           },
-//         ),
-//       );
-//       return UserModel.fromJson(res.data);
-//     } on DioException catch (e) {
-//       if (e.response != null) {
-//         throw Exception(e.response?.data['message'] ?? 'Lấy thông tin thất bại!');
-//       } else {
-//         throw Exception('Không thể kết nối đến server!');
-//       }
-//     }
-//   }
-// }
   Future<UserModel> getUserInfo({required String accessToken}) async {
     try {
       final res = await _dio.get(
         '/user/get-user-info',
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $accessToken',
-          },
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
       );
 
       // Giả sử backend trả về:
@@ -111,16 +84,33 @@ class UserServices {
       // }
 
       final data = res.data['data'];
-      print("Token đang dùng để gọi getUserInfo: $data");// Lấy object chứa user
+      print(
+        "Token đang dùng để gọi getUserInfo: $data",
+      ); // Lấy object chứa user
       return UserModel.fromJson(data);
     } on DioException catch (e) {
       if (e.response != null) {
         throw Exception(
-            e.response?.data['message'] ?? 'Lấy thông tin thất bại!');
+          e.response?.data['message'] ?? 'Lấy thông tin thất bại!',
+        );
       } else {
         throw Exception('Không thể kết nối đến server!');
       }
     }
   }
 
+  Future<void> sendOtp(String email) async {
+    await _dio.post('/user/forgot-password', data: {'email': email});
+  }
+
+  Future<void> verifyOtp(String email, String otp) async {
+    await _dio.post('/user/verify-otp', data: {'email': email, 'otp': otp});
+  }
+
+  Future<void> resetPassword(String email, String newPassword) async {
+    await _dio.post(
+      '/user/reset-password',
+      data: {'email': email, 'newPassword': newPassword},
+    );
+  }
 }

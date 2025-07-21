@@ -1,5 +1,8 @@
 import 'package:go_router/go_router.dart';
+import 'package:shopapp/screens/login/forgot_password_screen.dart';
 import 'package:shopapp/screens/login/login_screen.dart';
+import 'package:shopapp/screens/login/reset_password_screen.dart';
+import 'package:shopapp/screens/login/verify_otp_screen.dart';
 import 'package:shopapp/screens/product_detail/product_detail_screen.dart';
 import 'package:shopapp/screens/search/search_screen.dart';
 import 'package:shopapp/screens/signup/signup_screen.dart';
@@ -10,6 +13,7 @@ import '../screens/product/product_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../widgets/BottomNav/bottom_nav.dart';
 import '../screens/splash/splash_screen.dart';
+import 'package:flutter/material.dart';
 
 // final GoRouter router = GoRouter(
 //   initialLocation: '/login',
@@ -116,6 +120,40 @@ final GoRouter router = GoRouter(
           NoTransitionPage(key: state.pageKey, child: const LoginScreen()),
     ),
     GoRoute(
+        path: '/forgot-password',
+        name: 'forgot-password',
+        pageBuilder: (context, state) =>
+            NoTransitionPage(
+                key: state.pageKey, child: const ForgotPasswordScreen()),
+    ),
+    GoRoute(
+      path: '/verify-otp',
+      name: 'verify-otp',
+      builder: (context, state) {
+        final email = state.extra;
+        if (email is! String || email.isEmpty) {
+          return const Scaffold(
+            body: Center(child: Text('❌ Không tìm thấy email')),
+          );
+        }
+        return VerifyOtpScreen(email: email);
+      },
+    ),
+
+    GoRoute(
+      path: '/reset-password',
+      name: 'reset-password', // <-- tên này phải khớp
+      builder: (context, state) {
+        final email = state.extra;
+        if (email is! String || email.isEmpty) {
+          return const Scaffold(
+            body: Center(child: Text('❌ Không tìm thấy email')),
+          );
+        }
+        return ResetPasswordScreen(email: email);
+      },
+    ),
+    GoRoute(
       path: '/signup',
       name: 'signup',
       pageBuilder: (context, state) =>
@@ -165,13 +203,15 @@ final GoRouter router = GoRouter(
           path: '/product',
           name: 'product',
           pageBuilder: (context, state) =>
-              NoTransitionPage(key: state.pageKey, child: const ProductScreen()),
+              NoTransitionPage(
+                  key: state.pageKey, child: const ProductScreen()),
         ),
         GoRoute(
           path: '/profile',
           name: 'profile',
           pageBuilder: (context, state) =>
-              NoTransitionPage(key: state.pageKey, child: const ProfileScreen()),
+              NoTransitionPage(
+                  key: state.pageKey, child: const ProfileScreen()),
         ),
         GoRoute(
           path: '/wish',

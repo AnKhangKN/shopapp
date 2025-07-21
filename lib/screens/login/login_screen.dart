@@ -154,6 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextButton(
                         onPressed: () {
                           // TODO: Chuyển sang màn Quên mật khẩu
+                          context.pushNamed('forgot-password');
                         },
                         child: const Text(
                           'Quên mật khẩu?',
