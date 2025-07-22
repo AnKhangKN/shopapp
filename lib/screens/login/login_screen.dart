@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
               // Tiêu đề
               Center(
                 child: const Text(
-                  'Chào mừng trở lại 👋',
+                  'Chào mừng trở lại',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ),
