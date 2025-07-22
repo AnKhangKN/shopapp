@@ -20,6 +20,7 @@ class ProductItemCard extends StatelessWidget {
     final price = product.details.isNotEmpty ? product.details[0].price : 0;
 
     return Card(
+      color: Colors.white,
       child: InkWell(
         onTap: () {
           final currentLocation = GoRouter.of(
@@ -59,7 +60,7 @@ class ProductItemCard extends StatelessWidget {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white,
                           shape: BoxShape.circle,
                         ),
                         padding: const EdgeInsets.all(6),

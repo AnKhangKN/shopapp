@@ -119,6 +119,7 @@ class _ProductScreenState extends State<ProductScreen> {
               categories: _categories,
             ),
           ),
+
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             sliver: SliverGrid(
