@@ -60,18 +60,14 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkLoginStatus() async {
     final token = await TokenStorage.getToken();
 
+    // Tạm delay 1 giây để thấy splash
     await Future.delayed(const Duration(seconds: 1));
 
-    // 👇 Đảm bảo context đã build xong
-    if (!mounted) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      if (token != null && token.isNotEmpty) {
-        context.goNamed('home');
-      } else {
-        context.goNamed('login');
-      }
-    });
+    if (token != null && token.isNotEmpty) {
+      context.goNamed('home'); // Đã đăng nhập
+    } else {
+      context.goNamed('login'); // Chưa đăng nhập
+    }
   }
 
   @override
