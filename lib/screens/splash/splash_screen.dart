@@ -60,21 +60,41 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkLoginStatus() async {
     final token = await TokenStorage.getToken();
 
-    // Tạm delay 1 giây để thấy splash
     await Future.delayed(const Duration(seconds: 1));
 
-    if (token != null && token.isNotEmpty) {
-      context.goNamed('home'); // Đã đăng nhập
-    } else {
-      context.goNamed('login'); // Chưa đăng nhập
-    }
+    // 👇 Đảm bảo context đã build xong
+    if (!mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (token != null && token.isNotEmpty) {
+        context.goNamed('home');
+      } else {
+        context.goNamed('login');
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(), // Loading
+        child: AnimatedOpacity(
+          opacity: 1.0,
+          duration: const Duration(milliseconds: 500),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'assets/images/logo_nike.png',
+                width: 150,
+                height: 150,
+                fit: BoxFit.contain,
+              ),
+              // const SizedBox(height: 20),
+              // const CircularProgressIndicator(),
+            ],
+          ),
+        ),
       ),
     );
   }

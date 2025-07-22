@@ -61,7 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Column(
+          child: user == null
+              ? Center(child: CircularProgressIndicator())
+              : Column(
             children: [
               Container(
                 child: Text(
