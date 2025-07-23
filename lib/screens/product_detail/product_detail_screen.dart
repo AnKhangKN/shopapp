@@ -25,6 +25,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Product? _product;
   List<ProductDetail> _details = [];
 
+  int quantity = 1;
+  final TextEditingController _quantityController = TextEditingController(
+    text: '1',
+  );
+
   bool _loading = true;
   String? _error;
 
@@ -318,43 +323,78 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
             SizedBox(height: 30),
 
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: () {
-                        // TODO: giảm số lượng
-                      },
-                    ),
-                    SizedBox(
-                      width: 40,
-                      height: 35,
-                      child: TextField(
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(vertical: 10),
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        // TODO: tăng số lượng
-                      },
-                    ),
-                  ],
-                ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(8),
               ),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: quantity > 1
+                        ? () {
+                            setState(() {
+                              quantity--;
+                              _quantityController.text = quantity.toString();
+                            });
+                          }
+                        : null, // disable nếu nhỏ hơn 1
+                  ),
+                  SizedBox(
+                    width: 40,
+                    height: 35,
+                    child: TextField(
+                      controller: _quantityController,
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      onChanged: (value) {
+                        final newValue = int.tryParse(value);
+                        final maxQuantity = selectedDetail?.quantity ?? 0;
 
+                        if (newValue != null &&
+                            newValue >= 1 &&
+                            newValue <= maxQuantity) {
+                          setState(() {
+                            quantity = newValue;
+                          });
+                        } else {
+                          // Nếu nhập sai hoặc vượt giới hạn
+                          _quantityController.text = quantity.toString();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Đã vượt quá số lượng!',
+                              ),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed:
+                        (selectedDetail != null &&
+                            quantity < selectedDetail!.quantity)
+                        ? () {
+                            setState(() {
+                              quantity++;
+                              _quantityController.text = quantity.toString();
+                            });
+                          }
+                        : null, // disable nếu đã đạt tồn kho
+                  ),
+                ],
+              ),
+            ),
 
             SizedBox(height: 20),
 
