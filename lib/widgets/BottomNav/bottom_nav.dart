@@ -47,6 +47,7 @@ class BottomNav extends StatelessWidget {
         currentIndex: selectedIndex,
         onTap: (index) => _onItemTapped(context, index),
         type: BottomNavigationBarType.fixed,
+        elevation: 0,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(FeatherIcons.home),

@@ -19,7 +19,7 @@ class ProductCard extends StatelessWidget {
 
     return SizedBox(
       width: 160,
-      child: Material(
+      child: Card(
         color: Colors.white,
         elevation: 2,
         clipBehavior: Clip.antiAlias,

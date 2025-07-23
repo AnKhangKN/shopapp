@@ -56,6 +56,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return uniqueMap.values.toList();
   }
 
+  List<Product> getBestSellerProducts(List<Product> products, {int limit = 10}) {
+    // Sắp xếp theo trường soldCount giảm dần
+    products.sort((a, b) => (b.soldCount ?? 0).compareTo(a.soldCount ?? 0));
+    return products.take(limit).toList();
+  }
+
   Future<void> fetchUserInfo() async {
     final token = await TokenStorage.getToken();
 
@@ -89,62 +95,68 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(0.0),
           child: user == null
               ? Center(child: CircularProgressIndicator())
               : ListView(
                   children: [
-                    Text(
-                      "${getGreeting()}, ${user?.userName ?? "User"}",
-                      style: const TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        "${getGreeting()}, ${user?.userName ?? "User"}",
+                        style: const TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
 
                     const SizedBox(height: 25),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Top Picks for you",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                    Container(
+                      padding: EdgeInsets.only(left: 16, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                "Top Picks for you",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              "Recommended products",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                context.pushNamed('product');
-                              },
-                              child: const Text(
-                                "View All",
+                              Text(
+                                "Recommended products",
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.grey,
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  context.pushNamed('product');
+                                },
+                                child: const Text(
+                                  "View All",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
 
                     const SizedBox(height: 20),
@@ -161,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Text('Lỗi: ${snapshot.error}');
                           }
 
-                          final products = snapshot.data!;
+                          final products = getUniqueCategoryProducts(snapshot.data!);
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: products.length,
@@ -176,7 +188,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
+
                     Container(
+                      padding: EdgeInsets.only(left: 16, right: 16),
                       child: Text(
                         "New From Nike",
                         style: TextStyle(
@@ -185,8 +199,107 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 20),
 
+                    GestureDetector(
+                      onTap: () {
+                        context.push('/discover/structure26');
+                      },
+                      child: Stack(
+                        children: [
+                          Image.asset(
+                            'assets/images/structure26.png',
+                            width: double.infinity,
+                            height: 500,
+                            fit: BoxFit.cover,
+                          ),
+                          Positioned(
+                            bottom: 16,
+                            left: 16,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Shop Now',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    shadows: [
+                                      Shadow(
+                                        offset: Offset(1, 1),
+                                        blurRadius: 3,
+                                        color: Colors.black45,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  'structure 26'.toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    shadows: [
+                                      Shadow(
+                                        offset: Offset(1, 1),
+                                        blurRadius: 3,
+                                        color: Colors.black45,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                ElevatedButton(onPressed: () {
+                                  context.push('/discover/structure26');
+                                }, child: Text("Explore", style: TextStyle(color: Colors.black),)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     Container(
+                      padding: EdgeInsets.only(left: 16, right: 16),
+                      child: Text(
+                        "Best Seller",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 240,
+                      child: FutureBuilder<List<Product>>(
+                        future: _futureProducts,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+                          if (snapshot.hasError) {
+                            return Text('Lỗi: ${snapshot.error}');
+                          }
+
+                          final products = getBestSellerProducts(snapshot.data!);
+
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: products.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: ProductCard(product: products[index]),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    // footer home
+                    Container(
+                      padding: EdgeInsets.only(top: 30, bottom: 60),
                       child: Column(
                         children: [
                           Image.asset(
