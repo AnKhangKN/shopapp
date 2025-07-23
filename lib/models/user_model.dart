@@ -76,24 +76,29 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['_id'],
-      userName: json['userName'],
-      email: json['email'],
-      image: json['image'],
-      accountStatus: json['accountStatus'],
-      isAdmin: json['isAdmin'],
-      accessToken: json['accessToken'],
-      refreshToken: json['refreshToken'],
-      emailVerified: json['emailVerified'],
-      following: json['following'],
-      shippingAddress: (json['shippingAddress'] as List?)
-          ?.map((e) => ShippingAddress.fromJson(e))
-          .toList(),
-      wishlist: (json['wishlist'] as List?)
-          ?.map((e) => WishlistItem.fromJson(e))
-          .toList(),
-    );
+    try {
+      return UserModel(
+        id: json['_id'],
+        userName: json['userName'],
+        email: json['email'] ?? "", // fallback an empty string
+        image: json['image'],
+        accountStatus: json['accountStatus'],
+        isAdmin: json['isAdmin'],
+        accessToken: json['accessToken'],
+        refreshToken: json['refreshToken'],
+        emailVerified: json['emailVerified'],
+        following: json['following'],
+        shippingAddress: (json['shippingAddress'] as List?)
+            ?.map((e) => ShippingAddress.fromJson(e))
+            .toList(),
+        wishlist: (json['wishlist'] as List?)
+            ?.map((e) => WishlistItem.fromJson(e))
+            .toList(),
+      );
+    } catch (e) {
+      print("Lỗi khi parse UserModel: $e");
+      rethrow;
+    }
   }
 
   Map<String, dynamic> toJson() {

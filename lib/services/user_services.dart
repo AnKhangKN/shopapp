@@ -76,17 +76,8 @@ class UserServices {
         options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
       );
 
-      // Giả sử backend trả về:
-      // {
-      //   "status": "OK",
-      //   "message": "Lấy thông tin thành công",
-      //   "token": { ...thông tin user... }
-      // }
-
       final data = res.data['data'];
-      print(
-        "Token đang dùng để gọi getUserInfo: $data",
-      ); // Lấy object chứa user
+      print("Token đang dùng để gọi getUserInfo: $data");
       return UserModel.fromJson(data);
     } on DioException catch (e) {
       if (e.response != null) {
