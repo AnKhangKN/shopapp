@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> fetchUserInfo() async {
     final token = await TokenStorage.getToken();
-    print("token $token");
 
     if (token == null || token.isEmpty) return;
 
