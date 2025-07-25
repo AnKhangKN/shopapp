@@ -43,6 +43,7 @@ class BottomNav extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(child: child),
+
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
         onTap: (index) => _onItemTapped(context, index),

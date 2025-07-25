@@ -1,4 +1,6 @@
 import 'package:go_router/go_router.dart';
+import 'package:shopapp/screens/checkout/add_address_screen.dart';
+import 'package:shopapp/screens/checkout/checkout_screen.dart';
 import 'package:shopapp/screens/login/forgot_password_screen.dart';
 import 'package:shopapp/screens/login/login_screen.dart';
 import 'package:shopapp/screens/login/reset_password_screen.dart';
@@ -15,97 +17,10 @@ import '../widgets/BottomNav/bottom_nav.dart';
 import '../screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 
-// final GoRouter router = GoRouter(
-//   initialLocation: '/login',
-//   debugLogDiagnostics: true,
-//   routes: [
-//     ShellRoute(
-//       builder: (context, state, child) => BottomNav(child: child),
-//       routes: [
-//         GoRoute(
-//           path: '/', // Tương đương với '/'
-//           name: 'home',
-//           pageBuilder: (context, state) =>
-//               NoTransitionPage(key: state.pageKey, child: const HomeScreen()),
-//         ),
-//         GoRoute(
-//           path: '/cart',
-//           name: 'cart',
-//           pageBuilder: (context, state) =>
-//               NoTransitionPage(key: state.pageKey, child: const CartScreen()),
-//         ),
-//         GoRoute(
-//           path: '/product',
-//           name: 'product',
-//           pageBuilder: (context, state) => NoTransitionPage(
-//             key: state.pageKey,
-//             child: const ProductScreen(),
-//           ),
-//         ),
-//         GoRoute(
-//           path: '/profile',
-//           name: 'profile',
-//           pageBuilder: (context, state) => NoTransitionPage(
-//             key: state.pageKey,
-//             child: const ProfileScreen(),
-//           ),
-//         ),
-//         GoRoute(
-//           path: '/wish',
-//           name: 'wish',
-//           pageBuilder: (context, state) =>
-//               NoTransitionPage(key: state.pageKey, child: const WishScreen()),
-//         ),
-//         GoRoute(
-//           path: '/login',
-//           name: 'login',
-//           pageBuilder: (context, state) =>
-//               NoTransitionPage(key: state.pageKey, child: const LoginScreen()),
-//         ),
-//         GoRoute(
-//           path: '/signup',
-//           name: 'signup',
-//           pageBuilder: (context, state) =>
-//               NoTransitionPage(key: state.pageKey, child: const SignupScreen()),
-//         ),
-//         GoRoute(
-//           path: '/search',
-//           name: 'search',
-//           pageBuilder: (context, state) {
-//             final from = state.uri.queryParameters['from'];
-//             return NoTransitionPage(
-//               key: state.pageKey,
-//               child: SearchScreen(from: from),
-//             );
-//           },
-//         ),
-//
-//         GoRoute(
-//           path: '/product/:productId',
-//           name: 'product_detail',
-//           pageBuilder: (context, state) {
-//             final id = state.pathParameters['productId']!;
-//             final from = state.uri.queryParameters['from'];
-//             return NoTransitionPage(
-//               key: state.pageKey,
-//               child: ProductDetailScreen(
-//                 productId: id,
-//                 from: from,
-//               ),
-//             );
-//           },
-//         ),
-//
-//       ],
-//     ),
-//   ],
-// );
-
 final GoRouter router = GoRouter(
   initialLocation: '/splash',
   debugLogDiagnostics: true,
   routes: [
-
     // ✅ Những trang KHÔNG có BottomNav
     GoRoute(
       path: '/splash',
@@ -120,11 +35,12 @@ final GoRouter router = GoRouter(
           NoTransitionPage(key: state.pageKey, child: const LoginScreen()),
     ),
     GoRoute(
-        path: '/forgot-password',
-        name: 'forgot-password',
-        pageBuilder: (context, state) =>
-            NoTransitionPage(
-                key: state.pageKey, child: const ForgotPasswordScreen()),
+      path: '/forgot-password',
+      name: 'forgot-password',
+      pageBuilder: (context, state) => NoTransitionPage(
+        key: state.pageKey,
+        child: const ForgotPasswordScreen(),
+      ),
     ),
     GoRoute(
       path: '/verify-otp',
@@ -183,6 +99,20 @@ final GoRouter router = GoRouter(
       },
     ),
 
+    GoRoute(
+      path: '/checkout',
+      name: 'checkout',
+      pageBuilder: (context, state) =>
+      const NoTransitionPage(child: CheckoutScreen()),
+    ),
+
+    GoRoute(
+      path: '/add-address',
+      name: 'addAddress',
+      pageBuilder: (context, state) =>
+      const NoTransitionPage(child: AddAddressScreen()),
+    ),
+
     // ✅ Các route CÓ BottomNav
     ShellRoute(
       builder: (context, state, child) => BottomNav(child: child),
@@ -202,16 +132,18 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/product',
           name: 'product',
-          pageBuilder: (context, state) =>
-              NoTransitionPage(
-                  key: state.pageKey, child: const ProductScreen()),
+          pageBuilder: (context, state) => NoTransitionPage(
+            key: state.pageKey,
+            child: const ProductScreen(),
+          ),
         ),
         GoRoute(
           path: '/profile',
           name: 'profile',
-          pageBuilder: (context, state) =>
-              NoTransitionPage(
-                  key: state.pageKey, child: const ProfileScreen()),
+          pageBuilder: (context, state) => NoTransitionPage(
+            key: state.pageKey,
+            child: const ProfileScreen(),
+          ),
         ),
         GoRoute(
           path: '/wish',
@@ -219,6 +151,7 @@ final GoRouter router = GoRouter(
           pageBuilder: (context, state) =>
               NoTransitionPage(key: state.pageKey, child: const WishScreen()),
         ),
+
       ],
     ),
   ],
