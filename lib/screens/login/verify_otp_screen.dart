@@ -34,7 +34,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
       context.goNamed('reset-password', extra: widget.email);
     } catch (e) {
       setState(() {
-        _message = "❌ Xác minh thất bại: ${e.toString()}";
+        _message = "Xác minh thất bại: ${e.toString()}";
       });
     } finally {
       setState(() {

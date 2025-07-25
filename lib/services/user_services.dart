@@ -76,8 +76,7 @@ class UserServices {
         options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
       );
 
-      final data = res.data['data'];
-      print("Token đang dùng để gọi getUserInfo: $data");
+      final data = res.data['data']['user'];
       return UserModel.fromJson(data);
     } on DioException catch (e) {
       if (e.response != null) {

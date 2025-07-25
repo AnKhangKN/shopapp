@@ -34,7 +34,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       );
 
       setState(() {
-        _message = "✅ Mật khẩu đã được đặt lại thành công!";
+        _message = "Mật khẩu đã được đặt lại thành công!";
       });
 
       // Điều hướng về màn đăng nhập sau 2 giây
@@ -42,7 +42,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       if (mounted) context.goNamed('login');
     } catch (e) {
       setState(() {
-        _message = "❌ Lỗi: ${e.toString()}";
+        _message = "Lỗi: ${e.toString()}";
       });
     } finally {
       setState(() {
