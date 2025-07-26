@@ -44,11 +44,7 @@ class CheckoutServices {
     }
   }
 
-  Future<void> addAddress({
-    required String phone,
-    required String address,
-    required String city,
-  }) async {
+  Future<void> addAddress({required String phone, required String address, required String city,}) async {
     try {
       final token = await _getToken();
       if (token == null) throw Exception('Chưa đăng nhập');
@@ -70,14 +66,7 @@ class CheckoutServices {
     }
   }
 
-  Future<void> createOrder({
-    required Map<String, dynamic> shippingAddress,
-    required List<Map<String, dynamic>> items,
-    required String orderNote,
-    required double totalPrice,
-    required double shippingPrice,
-    required String paymentMethod,
-  }) async {
+  Future<void> createOrder({required Map<String, dynamic> shippingAddress, required List<Map<String, dynamic>> items, required String orderNote, required double totalPrice, required int shippingPrice, required String paymentMethod,}) async {
     try {
       final token = await _getToken();
       if (token == null) throw Exception('Chưa đăng nhập');
@@ -111,4 +100,32 @@ class CheckoutServices {
     }
   }
 
+  Future<void> deleteAddress (String phone, String address, String city) async {
+    try {
+      final token = await _getToken();
+      if (token == null) throw Exception('Chưa đăng nhập');
+
+      final response = await _dio.delete(
+        '/user/shippingAddress',
+        data: {
+          'phone': phone,
+          'address': address,
+          'city': city
+        }, options: Options(headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        })
+      );
+
+      if (response.statusCode == 200) {
+        print("Đã xóa địa chỉ thành công");
+      } else {
+        throw Exception('Không thể tạo đơn hàng: ${response.statusMessage}');
+      }
+
+    } catch (error) {
+      print('Lỗi xóa địa chỉ: $error');
+      rethrow;
+    }
+  }
 }

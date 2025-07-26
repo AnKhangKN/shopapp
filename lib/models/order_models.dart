@@ -5,8 +5,8 @@ class Order {
   final ShippingAddress shippingAddress;
   final List<OrderItem> items;
   final String orderNote;
-  final double totalPrice;
-  final double shippingPrice;
+  final int totalPrice;
+  final int shippingPrice;
   final String paymentMethod; // cod or creditCard
 
   Order({
@@ -25,8 +25,8 @@ class Order {
           .map((item) => OrderItem.fromJson(item))
           .toList(),
       orderNote: json['orderNote'] ?? '',
-      totalPrice: (json['totalPrice'] as num).toDouble(),
-      shippingPrice: (json['shippingPrice'] as num).toDouble(),
+      totalPrice: (json['totalPrice']),
+      shippingPrice: (json['shippingPrice']),
       paymentMethod: json['paymentMethod'],
     );
   }

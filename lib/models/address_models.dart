@@ -24,4 +24,9 @@ class ShippingAddress {
       'city': city,
     };
   }
+
+  @override
+  String toString() {
+    return 'ShippingAddress(phone: $phone, address: $address, city: $city)';
+  }
 }

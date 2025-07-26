@@ -125,7 +125,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (_loading) return Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -170,7 +169,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             const SizedBox(height: 12),
             Text(product.productName, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            Text('Giá: ${_formatter.format(selectedDetail?.price ?? 0)}đ'),
+            Text('Giá: ${_formatter.format(selectedDetail?.price ?? 0)} đ'),
             const SizedBox(height: 8),
             Text('Tồn kho: ${selectedDetail?.quantity ?? 0}'),
             const SizedBox(height: 12),

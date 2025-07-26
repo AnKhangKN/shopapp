@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:shopapp/models/product_models.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -18,6 +19,7 @@ class ProductItemCard extends StatelessWidget {
         ? '$baseImageUrl/${product.images[0]}'
         : null;
     final price = product.details.isNotEmpty ? product.details[0].price : 0;
+    final NumberFormat _formatter = NumberFormat("#,##0", "vi_VN");
 
     return Card(
       color: Colors.white,
@@ -57,6 +59,7 @@ class ProductItemCard extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         // TODO: Xử lý thêm vào wishlist
+                        print("Thêm vào danh sách ước");
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -97,7 +100,7 @@ class ProductItemCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Text(
-                'Giá: $price VNĐ',
+                'Giá: ${_formatter.format(price ?? 0)}đ',
                 style: const TextStyle(fontSize: 12),
               ),
             ),

@@ -112,6 +112,32 @@ class CartService {
     }
   }
 
-  // Future<void> deleteCartItem
+  Future<void> deleteCartItem (String productId, String color, String size) async {
+    try {
+      final token = await _getToken();
+      if (token == null) throw Exception('Chưa đăng nhập');
+
+      final response = await _dio.delete(
+        '/user/carts/deleteItems',
+        data: {
+          'productId': productId,
+          'color': color,
+          'size': size
+        }, options: Options( headers: {
+          'Authorization': 'Bearer $token',
+        })
+      );
+
+      if (response.statusCode == 200) {
+        print("Xóa sản phẩm thành công!");
+      } else {
+        throw Exception('Lỗi cập nhật số lượng: ${response.statusCode}');
+      }
+
+    } catch (error) {
+      print("Error ${error}");
+      rethrow;
+    }
+  }
 
 }
