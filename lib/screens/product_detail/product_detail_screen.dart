@@ -7,9 +7,11 @@ import 'package:shopapp/constants/app_colors.dart';
 import 'package:shopapp/models/cart_models.dart';
 import 'package:shopapp/models/product_detail_models.dart';
 import 'package:shopapp/models/product_models.dart';
+import 'package:shopapp/models/wish_list_models.dart';
 import 'package:shopapp/screens/product_detail/button_custom/button_custom.dart';
 import 'package:shopapp/services/cart_services.dart';
 import 'package:shopapp/services/product_services.dart';
+import 'package:shopapp/services/wish_list_services.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String productId;
@@ -24,6 +26,7 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final _productServices = ProductServices();
   final cartService = CartService();
+  final _wishListServices = WishListServices();
 
   Product? _product;
   List<ProductDetail> _details = [];
@@ -125,6 +128,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
   }
 
+  Future<void> _addWishList(String productId, String name, String image) async {
+    try {
+      final res = await _wishListServices.addWishList(productId, name, image);
+
+      if (res.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Đã thêm vào danh sách yêu thích')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Thêm vào yêu thích thất bại')),
+        );
+      }
+    } catch (error) {
+      print("Lỗi thêm yêu thích: $error");
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) return Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -148,12 +170,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
         ),
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image gallery...
+
+
+
             if (product.images.isNotEmpty)
               SizedBox(
                 height: 300,
@@ -167,6 +192,38 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   },
                 ),
               ),
+
+            const SizedBox(height: 8),
+            if (product.images.length > 1)
+              SizedBox(
+                height: 60,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: product.images.length,
+                  itemBuilder: (context, index) {
+                    final imageUrl = '${dotenv.env['SHOW_IMAGE_BASE_URL']}/${product.images[index]}';
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedImageIndex = index;
+                          _pageController.jumpToPage(index);
+                        });
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: _selectedImageIndex == index ? Colors.blue : Colors.grey,
+                            width: 2,
+                          ),
+                        ),
+                        child: Image.network(imageUrl, width: 60, height: 60, fit: BoxFit.cover),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
             const SizedBox(height: 12),
             Text(product.productName, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             Text('Giá: ${_formatter.format(selectedDetail?.price ?? 0)} đ'),
@@ -265,7 +322,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               backgroundColor: Colors.white,
               foregroundColor: AppColors.textPrimary,
               onPressed: () {
-                // logic yêu thích
+                _addWishList(product.id, product.productName, product.images[0]);
               },
             ),
             const SizedBox(height: 30),

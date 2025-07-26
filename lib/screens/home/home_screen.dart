@@ -111,6 +111,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
 
+                    const SizedBox(height: 20,),
+
+                    ElevatedButton(onPressed: () async {
+                      await TokenStorage.clearToken();
+                      context.go('/login');
+                    }, child: Text('Đăng xuất')),
+
                     const SizedBox(height: 25),
 
                     Container(

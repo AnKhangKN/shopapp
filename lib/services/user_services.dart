@@ -16,10 +16,7 @@ class UserServices {
     ),
   );
 
-  Future<Response> loginUser({
-    required String email,
-    required String password,
-  }) async {
+  Future<Response> loginUser({required String email, required String password,}) async {
     final data = {'email': email, 'password': password};
 
     try {
@@ -43,12 +40,7 @@ class UserServices {
     }
   }
 
-  Future<Response> registerUser({
-    required String email,
-    required String password,
-    String? userName,
-    String? image,
-  }) async {
+  Future<Response> registerUser({required String email, required String password, String? userName, String? image,}) async {
     final data = {
       'email': email,
       'password': password,
@@ -58,6 +50,7 @@ class UserServices {
 
     try {
       final res = await _dio.post('/user/register', data: data);
+      // print(res)
       return res;
     } on DioException catch (e) {
       // Nếu có response từ server (vd: email đã tồn tại)
