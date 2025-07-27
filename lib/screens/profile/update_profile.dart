@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shopapp/services/profile_services.dart';
 
@@ -13,7 +14,6 @@ class UpdateProfile extends StatefulWidget {
 class _UpdateProfileState extends State<UpdateProfile> {
   File? _imageFile;
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -26,18 +26,36 @@ class _UpdateProfileState extends State<UpdateProfile> {
     }
   }
 
-  void _updateUserInfo() {
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _updateUserInfo() async {
     final name = _nameController.text.trim();
-    final email = _emailController.text.trim();
-    print('Tên: $name, Email: $email');
-    // Gọi API cập nhật thông tin người dùng ở đây
+
+    if (name.isEmpty) {
+      _showSnackBar("Tên không được để trống.");
+      return;
+    }
+
+    try {
+      final response = await ProfileServices().updateProfileInfo(name);
+
+      if (response.statusCode == 200) {
+        _showSnackBar("Cập nhật tên thành công.");
+      }
+    } catch (error) {
+      _showSnackBar(error.toString().replaceFirst("Exception: ", ""));
+    }
   }
 
   void _updateAvatar() async {
     if (_imageFile == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Vui lòng chọn ảnh trước.")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Vui lòng chọn ảnh trước.")));
       return;
     }
 
@@ -56,17 +74,22 @@ class _UpdateProfileState extends State<UpdateProfile> {
     } catch (e) {
       print(e);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Lỗi: $e")),
-      );
-
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Lỗi: $e")));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Cập nhật thông tin")),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => context.pop('refresh'),
+          icon: Icon(Icons.arrow_back_ios),
+        ),
+        title: const Text("Cập nhật thông tin"),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -78,8 +101,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
                   image: _imageFile != null
                       ? FileImage(_imageFile!)
                       : const NetworkImage(
-                    'https://th.bing.com/th/id/R.8124f887824be033b0f103ba7c0650fb?rik=TGa71od4KhLxqw&riu=http%3a%2f%2fimg02.deviantart.net%2fb1da%2fi%2f2006%2f023%2f7%2f9%2fcapybara_swimming_by_henrieke.jpg&ehk=gNmSSh7U%2fscxQgqEU%2bb6GAbaWefl48MA4REMlo0mzCQ%3d&risl=&pid=ImgRaw&r=0',
-                  ) as ImageProvider,
+                              'https://th.bing.com/th/id/R.8124f887824be033b0f103ba7c0650fb?rik=TGa71od4KhLxqw&riu=http%3a%2f%2fimg02.deviantart.net%2fb1da%2fi%2f2006%2f023%2f7%2f9%2fcapybara_swimming_by_henrieke.jpg&ehk=gNmSSh7U%2fscxQgqEU%2bb6GAbaWefl48MA4REMlo0mzCQ%3d&risl=&pid=ImgRaw&r=0',
+                            )
+                            as ImageProvider,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -94,29 +118,19 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
             const SizedBox(height: 16),
 
+            ElevatedButton(
+              onPressed: _updateAvatar,
+              child: const Text("Cập nhật ảnh đại diện"),
+            ),
+
+            const SizedBox(height: 24),
+
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(
                 labelText: 'Nhập tên',
                 border: OutlineInputBorder(),
               ),
-            ),
-
-            const SizedBox(height: 16),
-
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            ElevatedButton(
-              onPressed: _updateAvatar,
-              child: const Text("Cập nhật ảnh đại diện"),
             ),
 
             const SizedBox(height: 12),

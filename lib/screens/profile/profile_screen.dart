@@ -26,9 +26,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
 
       print('user ${user?.userName}' );
-
-      
-      
     } catch (error) {
       print(error);
     }
@@ -112,7 +109,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(20),
                         onTap: () {
-                          context.push('/profile/update');
+                          context.push('/profile/update').then((result) {
+                            if (result == 'refresh') {
+                              getDetailUser();
+                            }
+                          });
                         },
                         child: Container(
                           height: 85,
