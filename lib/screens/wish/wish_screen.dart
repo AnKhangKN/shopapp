@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shopapp/models/wish_list_models.dart';
 import 'package:shopapp/services/wish_list_services.dart';
@@ -66,7 +67,7 @@ class _WishScreenState extends State<WishScreen> {
         actions: [
           IconButton(
             onPressed: () => context.pushNamed('search'),
-            icon: const Icon(Icons.search_sharp),
+            icon: const Icon(FeatherIcons.search),
           ),
         ],
       ),

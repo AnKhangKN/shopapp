@@ -17,11 +17,7 @@ class WishListServices {
     return prefs.getString('token');
   }
 
-  Future<Response> addWishList(
-    String productId,
-    String productName,
-    String productImg,
-  ) async {
+  Future<Response> addWishList(String productId, String productName, String productImg,) async {
     try {
       final token = await _getToken();
 
@@ -77,4 +73,23 @@ class WishListServices {
       rethrow;
     }
   }
+
+  Future<bool> checkWishItem(String productId) async {
+    try {
+      final token = await _getToken();
+      final res = await _dio.get(
+        '/user/wishes',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      final List<dynamic> data = res.data['wishlist'];
+      final wishList = data.map((json) => WishList.fromJson(json)).toList();
+
+      return wishList.any((item) => item.productId == productId);
+    } catch (error) {
+      print("Lỗi khi kiểm tra wishlist: $error");
+      return false;
+    }
+  }
+
 }

@@ -2,24 +2,76 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:shopapp/models/product_models.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shopapp/services/wish_list_services.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../models/product_models.dart';
 
-class ProductItemCard extends StatelessWidget {
+class ProductItemCard extends StatefulWidget {
   final Product product;
 
   const ProductItemCard({Key? key, required this.product}) : super(key: key);
 
   @override
+  State<ProductItemCard> createState() => _ProductItemCardState();
+}
+
+class _ProductItemCardState extends State<ProductItemCard> {
+  bool isWished = false; // trạng thái yêu thích
+  final _wishListServices = WishListServices();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkWishlist();
+  }
+
+  Future<void> _checkWishlist() async {
+    final exists = await _wishListServices.checkWishItem(widget.product.id);
+    setState(() {
+      isWished = exists;
+    });
+  }
+
+  Future<void> _toggleWishlist() async {
+    setState(() {
+      isWished = !isWished;
+    });
+
+    // TODO: Gọi API thêm hoặc xóa khỏi wishlist
+    try {
+      if (isWished) {
+        // await WishlistService().addToWishlist(widget.product.id);
+        await _wishListServices.addWishList(
+          widget.product.id,
+          widget.product.productName,
+          widget.product.images[0],
+        );
+        print("Đã thêm vào wishlist: ${widget.product.productName}");
+      } else {
+        await _wishListServices.deleteWishItem(widget.product.id);
+        print("Đã xóa khỏi wishlist: ${widget.product.productName}");
+      }
+    } catch (e) {
+      print("Lỗi wishlist: $e");
+      // rollback UI nếu cần
+      setState(() {
+        isWished = !isWished;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final baseImageUrl = dotenv.env['SHOW_IMAGE_BASE_URL'];
-    final imageUrl = product.images.isNotEmpty
-        ? '$baseImageUrl/${product.images[0]}'
+    final imageUrl = widget.product.images.isNotEmpty
+        ? '$baseImageUrl/${widget.product.images[0]}'
         : null;
-    final price = product.details.isNotEmpty ? product.details[0].price : 0;
-    final NumberFormat _formatter = NumberFormat("#,##0", "vi_VN");
+    final price = widget.product.details.isNotEmpty
+        ? widget.product.details[0].price
+        : 0;
+    final NumberFormat formatter = NumberFormat("#,##0", "vi_VN");
 
     return Card(
       color: Colors.white,
@@ -28,9 +80,8 @@ class ProductItemCard extends StatelessWidget {
           final currentLocation = GoRouter.of(
             context,
           ).routerDelegate.currentConfiguration.uri.toString();
-          context.go('/product/${product.id}?from=$currentLocation');
+          context.go('/product/${widget.product.id}?from=$currentLocation');
         },
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -57,20 +108,17 @@ class ProductItemCard extends StatelessWidget {
                     top: 8,
                     right: 8,
                     child: GestureDetector(
-                      onTap: () {
-                        // TODO: Xử lý thêm vào wishlist
-                        print("Thêm vào danh sách ước");
-                      },
+                      onTap: _toggleWishlist,
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
                         ),
                         padding: const EdgeInsets.all(6),
-                        child: const Icon(
-                          FeatherIcons.heart,
-                          size: 20,
-                          color: AppColors.textPrimary,
+                        child: Icon(
+                          isWished ? Icons.favorite : Icons.favorite_border,
+                          color: isWished ? Colors.red : AppColors.textPrimary,
+                          size: 22,
                         ),
                       ),
                     ),
@@ -78,11 +126,10 @@ class ProductItemCard extends StatelessWidget {
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                product.productName,
+                widget.product.productName,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontWeight: FontWeight.bold),
@@ -91,16 +138,15 @@ class ProductItemCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Text(
-                product.category,
+                widget.product.category,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                // style: const TextStyle(),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Text(
-                'Giá: ${_formatter.format(price ?? 0)}đ',
+                'Giá: ${formatter.format(price)}đ',
                 style: const TextStyle(fontSize: 12),
               ),
             ),
