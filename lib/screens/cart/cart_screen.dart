@@ -318,7 +318,7 @@ class _CartScreenState extends State<CartScreen> {
                 color: Colors.grey[200],
                 child: Image.network(
                   item.productImage != null
-                      ? '${dotenv.env['API_BASE_URL']}/productImage/${item.productImage}'
+                      ? '${dotenv.env['API_BASE_URL']}/image/product/${item.productImage}'
                       : 'https://via.placeholder.com/150',
                   fit: BoxFit.cover,
                 ),

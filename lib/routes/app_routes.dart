@@ -6,6 +6,8 @@ import 'package:shopapp/screens/login/login_screen.dart';
 import 'package:shopapp/screens/login/reset_password_screen.dart';
 import 'package:shopapp/screens/login/verify_otp_screen.dart';
 import 'package:shopapp/screens/product_detail/product_detail_screen.dart';
+import 'package:shopapp/screens/profile/history_screen.dart';
+import 'package:shopapp/screens/profile/update_profile.dart';
 import 'package:shopapp/screens/search/search_screen.dart';
 import 'package:shopapp/screens/signup/signup_screen.dart';
 import 'package:shopapp/screens/wish/wish_screen.dart';
@@ -37,10 +39,11 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/forgot-password',
       name: 'forgot-password',
-      pageBuilder: (context, state) => NoTransitionPage(
-        key: state.pageKey,
-        child: const ForgotPasswordScreen(),
-      ),
+      pageBuilder: (context, state) =>
+          NoTransitionPage(
+            key: state.pageKey,
+            child: const ForgotPasswordScreen(),
+          ),
     ),
     GoRoute(
       path: '/verify-otp',
@@ -113,6 +116,19 @@ final GoRouter router = GoRouter(
       const NoTransitionPage(child: AddAddressScreen()),
     ),
 
+    GoRoute(
+      path: '/profile/update',
+      name: 'updateProfile',
+      pageBuilder: (context, state) =>
+      const NoTransitionPage(child: UpdateProfile()),
+    ),
+
+    GoRoute(path: '/profile/history',
+        name: 'historyProfile',
+        pageBuilder: (context, state) =>
+        const NoTransitionPage(
+            child: HistoryScreen())),
+
     // ✅ Các route CÓ BottomNav
     ShellRoute(
       builder: (context, state, child) => BottomNav(child: child),
@@ -132,18 +148,20 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/product',
           name: 'product',
-          pageBuilder: (context, state) => NoTransitionPage(
-            key: state.pageKey,
-            child: const ProductScreen(),
-          ),
+          pageBuilder: (context, state) =>
+              NoTransitionPage(
+                key: state.pageKey,
+                child: const ProductScreen(),
+              ),
         ),
         GoRoute(
           path: '/profile',
           name: 'profile',
-          pageBuilder: (context, state) => NoTransitionPage(
-            key: state.pageKey,
-            child: const ProfileScreen(),
-          ),
+          pageBuilder: (context, state) =>
+              NoTransitionPage(
+                key: state.pageKey,
+                child: const ProfileScreen(),
+              ),
         ),
         GoRoute(
           path: '/wish',
@@ -151,7 +169,6 @@ final GoRouter router = GoRouter(
           pageBuilder: (context, state) =>
               NoTransitionPage(key: state.pageKey, child: const WishScreen()),
         ),
-
       ],
     ),
   ],

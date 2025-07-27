@@ -66,7 +66,7 @@ class _ProductItemCardState extends State<ProductItemCard> {
   Widget build(BuildContext context) {
     final baseImageUrl = dotenv.env['SHOW_IMAGE_BASE_URL'];
     final imageUrl = widget.product.images.isNotEmpty
-        ? '$baseImageUrl/${widget.product.images[0]}'
+        ? '$baseImageUrl/product/${widget.product.images[0]}'
         : null;
     final price = widget.product.details.isNotEmpty
         ? widget.product.details[0].price

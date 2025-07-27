@@ -106,7 +106,7 @@ class _WishScreenState extends State<WishScreen> {
                                     top: Radius.circular(12),
                                   ),
                                   child: Image.network(
-                                    "${dotenv.env['SHOW_IMAGE_BASE_URL']}/${product.productImg}",
+                                    "${dotenv.env['SHOW_IMAGE_BASE_URL']}/product/${product.productImg}",
                                     fit: BoxFit.cover,
                                     width: double.infinity,
                                   ),

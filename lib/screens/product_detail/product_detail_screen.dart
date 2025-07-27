@@ -212,7 +212,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       setState(() => _selectedImageIndex = index),
                   itemBuilder: (context, index) {
                     final imageUrl =
-                        '${dotenv.env['SHOW_IMAGE_BASE_URL']}/${product.images[index]}';
+                        '${dotenv.env['SHOW_IMAGE_BASE_URL']}/product/${product.images[index]}';
                     return Image.network(imageUrl, fit: BoxFit.cover);
                   },
                 ),
@@ -227,7 +227,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   itemCount: product.images.length,
                   itemBuilder: (context, index) {
                     final imageUrl =
-                        '${dotenv.env['SHOW_IMAGE_BASE_URL']}/${product.images[index]}';
+                        '${dotenv.env['SHOW_IMAGE_BASE_URL']}/product/${product.images[index]}';
                     return GestureDetector(
                       onTap: () {
                         setState(() {

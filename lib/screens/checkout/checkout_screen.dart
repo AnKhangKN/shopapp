@@ -315,7 +315,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                             child: ListTile(
                               leading: Image.network(
-                                '${dotenv.env['API_BASE_URL']}/productImage/${item.productImage}' ??
+                                '${dotenv.env['SHOW_IMAGE_BASE_URL']}/product/${item.productImage}' ??
                                     'https://www.tiffincurry.ca/wp-content/uploads/2021/02/default-product.png',
                                 width: 50,
                                 height: 50,

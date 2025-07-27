@@ -13,7 +13,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final baseImageUrl = dotenv.env['SHOW_IMAGE_BASE_URL'];
     final imageUrl = product.images.isNotEmpty
-        ? '$baseImageUrl/${product.images[0]}'
+        ? '$baseImageUrl/product/${product.images[0]}'
         : null;
     final price = product.details.isNotEmpty ? product.details[0].price : 0;
 
