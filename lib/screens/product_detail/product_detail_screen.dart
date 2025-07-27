@@ -126,9 +126,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
     final success = await cartService.addToCart(item: payload);
     if (success) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Đã thêm vào giỏ hàng')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Đã thêm vào giỏ hàng',
+            style: TextStyle(color: Colors.white), // màu chữ trắng
+          ),
+          backgroundColor: Colors.green, // nền xanh lá
+          duration: Duration(seconds: 2),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(
         context,
@@ -152,13 +159,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       final res = await _wishListServices.addWishList(productId, name, image);
 
       if (res.statusCode == 200) {
-
         setState(() {
           isWished = true; // Cập nhật UI
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Đã thêm vào danh sách yêu thích')),
+          SnackBar(
+            content: Text(
+              'Đã thêm vào danh sách yêu thích',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.green, // nền xanh lá
+            duration: Duration(seconds: 2),
+          ),
         );
       } else {
         ScaffoldMessenger.of(

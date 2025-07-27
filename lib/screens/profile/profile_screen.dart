@@ -79,9 +79,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         padding: EdgeInsets.all(10),
                         child: CircleAvatar(
                           radius: 70.0,
-                          backgroundImage: NetworkImage(
-                            '${dotenv.env['SHOW_IMAGE_BASE_URL']}/avatar/${user?.image}',
-                          ),
+                          backgroundImage: (user?.image != null)
+                              ? NetworkImage('${dotenv.env['SHOW_IMAGE_BASE_URL']}/avatar/${user!.image}')
+                              : null,
                           backgroundColor: Colors.grey[200],
                         ),
                       ),
@@ -158,14 +158,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Expanded(
                     child: Material(
                       child: InkWell(
-                        onTap: () => context.push('/'),
+                        onTap: () => context.push('/profile/security'),
                         child: Container(
                           height: 85,
                           decoration: const BoxDecoration(
                             color: Colors.orange,
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                           ),
-                          child: const Center(child: Text("Yeu thich")),
+                          child: const Center(child: Text("Bảo mật")),
                         ),
                       ),
                     ),

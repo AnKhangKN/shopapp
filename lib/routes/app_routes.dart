@@ -7,6 +7,7 @@ import 'package:shopapp/screens/login/reset_password_screen.dart';
 import 'package:shopapp/screens/login/verify_otp_screen.dart';
 import 'package:shopapp/screens/product_detail/product_detail_screen.dart';
 import 'package:shopapp/screens/profile/history_screen.dart';
+import 'package:shopapp/screens/profile/security_screen.dart';
 import 'package:shopapp/screens/profile/update_profile.dart';
 import 'package:shopapp/screens/search/search_screen.dart';
 import 'package:shopapp/screens/signup/signup_screen.dart';
@@ -128,6 +129,12 @@ final GoRouter router = GoRouter(
         pageBuilder: (context, state) =>
         const NoTransitionPage(
             child: HistoryScreen())),
+
+    GoRoute(path: '/profile/security',
+        name: 'securityProfile',
+        pageBuilder: (context, state) =>
+        const NoTransitionPage(
+            child: SecurityScreen())),
 
     // ✅ Các route CÓ BottomNav
     ShellRoute(

@@ -6,6 +6,7 @@ class OrderItem {
   final String color;
   final double price;
   final int quantity;
+  final DateTime? createAt;
 
   OrderItem({
     required this.productId,
@@ -15,6 +16,7 @@ class OrderItem {
     required this.color,
     required this.price,
     required this.quantity,
+    required this.createAt
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class OrderItem {
       color: json['color'],
       price: (json['price'] as num).toDouble(),
       quantity: json['quantity'],
+      createAt: json['createAt']
     );
   }
 }

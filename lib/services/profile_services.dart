@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:shopapp/models/order_models.dart';
 import 'package:shopapp/models/user_model.dart';
 
 class ProfileServices {
@@ -74,11 +75,7 @@ class ProfileServices {
 
       final response = await _dio.get(
         '/user/users',
-        options: Options(
-          headers: {
-            "Authorization": "Bearer $token",
-          },
-        ),
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
 
       if (response.statusCode == 200) {
@@ -86,7 +83,6 @@ class ProfileServices {
         print(response.data['user']);
 
         return UserModel.fromJson(response.data['user']);
-
       } else {
         throw Exception("Failed to fetch user: ${response.statusCode}");
       }
@@ -96,4 +92,82 @@ class ProfileServices {
     }
   }
 
+  Future<List<Order>> getAllHistory() async {
+    try {
+      final token = await _getToken();
+
+      final response = await _dio.get(
+        '/user/orders/histories',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      final orderHistory = response.data['orderHistory'];
+
+      print('Lịch sử đơn hàng ${orderHistory}');
+
+      if (orderHistory is List) {
+        return orderHistory
+            .map((json) => Order.fromJson(Map<String, dynamic>.from(json)))
+            .toList();
+      } else if (orderHistory is Map) {
+        return [
+          Order.fromJson(Map<String, dynamic>.from(orderHistory))
+        ];
+      } else {
+        throw Exception('Dữ liệu orderHistory không hợp lệ');
+      }
+    } catch (error) {
+      print('Lỗi khi lấy lịch sử đơn hàng: $error');
+      rethrow;
+    }
+  }
+
+  Future<bool> changeEmail(String email) async {
+    try {
+      final token = await _getToken();
+      final res = await _dio.put(
+        '/user/email',
+        data: {'email': email},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      return res.statusCode == 200;
+    } catch (error) {
+      print('Lỗi khi đổi email: $error');
+      return false;
+    }
+  }
+
+  Future<bool> changePassword(String password, String newPassword, String confirmPassword) async {
+    try {
+      final token = await _getToken();
+      final res = await _dio.put(
+        '/user/password',
+        data: {
+          'password': password,
+          'newPassword': newPassword,
+          'confirmPassword': confirmPassword,
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      return res.statusCode == 200;
+    } on DioError catch (e) {
+      // Ném lỗi cụ thể để bắt ở UI
+      final message = e.response?.data['message'] ?? "Lỗi không xác định.";
+      throw Exception(message);
+    }
+  }
 }
