@@ -170,4 +170,25 @@ class ProfileServices {
       throw Exception(message);
     }
   }
+
+  Future<Response> changeOrderStatus(String orderId, String status) async {
+    try {
+      final token = await _getToken();
+      final res = await _dio.patch(
+        '/user/orders/status',
+        data: {
+          'orderId': orderId,
+          'status': status,
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      return res;
+    } catch (error) {
+      throw Exception("Lỗi khi cập nhật trạng thái đơn hàng: $error");
+    }
+  }
 }

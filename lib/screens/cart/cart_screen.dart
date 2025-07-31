@@ -75,7 +75,7 @@ class _CartScreenState extends State<CartScreen> {
       print("Lỗi cập nhật số lượng: $e");
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Cập nhật thất bại")));
+      ).showSnackBar(const SnackBar(content: Text("Cập nhật thất bại, quá lượng trong kho!")));
     }
   }
 
